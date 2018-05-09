@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <!-- CDN DI JQUERY BY http://jquery.com/download/ -->
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+
+    <!-- BOOSTRAP DEPENDENCIES BY http://getbootstrap.com/docs/3.3/getting-started/ -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <script>
+        var uri = '../api/values'
+        $(document).ready(function () {
+            LoadMenus();
+            $('#FrmNuovo').submit(function (event) {
+                event.preventDefault();
+                var $form = $(this)
+                var Menu = {};
+                var url = $form.attr("action");
+                Menu.Nome = $form.find("input[id='Nome']").val();
+                Menu.Data = $form.find("input[id='Data']").val();
+                Menu.PrOCen = $form.find("input[id='PorC']").val();
+                var posting = $.post(url, Menu);
+                posting.done(function (data) {
+                    $("#Message").append(data);
+                });
+            });
+        });
+        function LoadMenu(id) {
+           
+            $.getJSON(uri + '/' + 1)
+                .done(function (data) {
+                    var $div = $('#Dettagli')
+                    $div.find("input[id='Name']").val(data.Nome);
+                    $div.find("input[id='date']").val(data.Data);
+                    $div.find("input[id='Poo']").val(data.PrOCen);
+
+                });
+            getPrimi();
+            getSecondi();
+           
+         
+        }
+        function getPrimi() {
+            $.getJSON('../api/values/primi')
+                .done(function (data) {
+                    $.each(data, function (key, item) {
+                        $('#Primi').append('<li class="list-group-item">' + item.nome + item.costo + '</li>');
+                    });
+                });
+        }
+        function getSecondi() {
+            $.getJSON('../api/values/secondi')
+                .done(function (data) {
+                    $.each(data, function (key, item) {
+                        $('#Secondi').append('<li class="list-group-item">' + item.nome + item.costo + '</li>');
+                    });
+                });
+        }
+            function LoadMenus() {
+                $("#Elenco").show();
+                $.getJSON(uri)
+                    .done(function (data) {
+                        $.each(data, function (key, item) {
+                            $('#Ele').append('<li class="list-group-item">' + item.Nome + item.PrOCen +
+                                '<button class ="btn btn-info" onclick="LoadMenu(' + item.id + ')">Dettagli</button></li>');
+                        });
+                    });
+        }
+        
+    </script>
+
+    <title> BEnvenuto da gino ecco il menu</title>
+</head>
+<body>
+    <div id="Elenco">
+        <div class="row">
+            <ul class="list-group" id="Ele"></ul>
+        </div>
+    </div>
+    <div id="AddMenu">
+        <form action="/api/Values" id="FrmNuovo" method="post">
+            <input id="Nome" placeholder="Nome..." />
+            <input id="Data" placeholder="Data..." />
+            <input id="PorC" placeholder="Pranzo o cena..." />
+            <button type="submit" class="btn btn-default" value="AddMenu"></button>
+        </form>
+    </div>
+    <ul id="Message"></ul>
+    <div>
+        <div id="Dettagli">
+            <label>Nome:</label>
+            <input id="Name" />
+            <label>Pranzo o cena</label>
+            <input id="Poo" />
+            <label>Data</label>
+            <input id="date" />
+            <div class="row">
+                <ul class="list-group" id="Primi"></ul>
+            </div>
+            <div class="row">
+                <ul class="list-group" id="Secondi"></ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
