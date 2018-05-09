@@ -7,8 +7,8 @@ namespace Algoritmi {
 	class Program {
 		static void Main(string[] args) {
 			//Es1();
-			int res = Es2("Nel del cammin  della mia vita mi  ritrovai a far codice su .NET" ,"mezzo");
-			Console.WriteLine("Occorrenze = {0}",res);
+			Es2("Nel del mi cammin della vita mia vita mi ritrovai mi a far codice sulla Luna ");
+			
 		}
 		public static void Es1(){
 			int count = 0;
@@ -28,13 +28,19 @@ namespace Algoritmi {
 				}
 			}
 		}
-		public static int Es2(string testo , string cerca){
-			string [] test = testo.Split(new char[] { '.', '?', '!', ' ', ';', ':', ',',' ' });
-			var result = from parola in test where parola.ToLowerInvariant()==cerca.ToLowerInvariant()
-							select parola;
-			int risultato = result.Count();
-			Console.WriteLine("La Parola {0} è presente {1} volte",cerca,risultato);
-			return risultato;
+		public static void Es2(string testo ){
+			string [] test = testo.Split(new char[] { '.', '?', '!', ' ', ';', ':', ',', } ,StringSplitOptions.RemoveEmptyEntries);
+			//string cerca = test[index];
+			List<string> tester = new List<string>();
+			foreach(string cerca in test){
+				if(!tester.Contains(cerca)){
+					tester.Add(cerca);
+					var result = from parola in test where parola.ToLowerInvariant()==cerca.ToLowerInvariant()
+									select parola;
+					int risultato = result.Count();
+					Console.WriteLine("La Parola ' {0} ' è presente {1} volte",cerca,risultato);
+				}
+			}
 		}
 	}
 }
